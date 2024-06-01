@@ -1,0 +1,11 @@
+{
+    "log4rsConfigLocation": "../config/local/log4rs-config.yml",
+    "opentelemetryConfigLocation": "../config/local/opentelemetry-config.json",
+    "rpcUrl": "wss://api.devnet.solana.com",
+    "programsSelector" : {
+        "programs" : ["BPFLoaderUpgradeab1e11111111111111111111111", "Ed25519SigVerify111111111111111111111111111", "KeccakSecp256k11111111111111111111111111111"]
+    },
+    "accountDataNotificationsEnabled": false,
+    "transactionNotificationsEnabled": true,
+    "logProcessorWorkerThreadCount": 2
+}

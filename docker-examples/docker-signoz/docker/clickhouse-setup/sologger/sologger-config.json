@@ -1,0 +1,11 @@
+{
+    "log4rsConfigLocation": "../config/local/log4rs-config.yml",
+    "opentelemetryConfigLocation": "../config/local/opentelemetry-config.json",
+    "rpcUrl": "wss://api.devnet.solana.com",
+    "programsSelector" : {
+        "programs" : ["*"]
+    },
+    "accountDataNotificationsEnabled": false,
+    "transactionNotificationsEnabled": true,
+    "logProcessorWorkerThreadCount": 3
+}

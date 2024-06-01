@@ -1,0 +1,43 @@
+refresh_rate: 30 seconds
+appenders:
+  stdout:
+    kind: console
+    encoder:
+      pattern: "{d(%Y-%m-%d %H:%M:%S):<20} {M:>20.30}:{L:>3} {h({l})}    {m}\n"
+
+root:
+  level: error
+  appenders:
+    - stdout
+
+loggers:
+  sologger_geyser_plugin::log_processor::error:
+    level: error
+    appenders:
+      - stdout
+    additive: false
+  sologger_geyser_plugin::log_processor::info:
+    level: info
+    appenders:
+      - stdout
+    additive: false
+  sologger_geyser_plugin::geyser_plugin_sologger::update_account:
+      level: error
+      appenders:
+        - stdout
+      additive: false
+  sologger_geyser_plugin::geyser_plugin_sologger::notify_block_metadata:
+    level: error
+    appenders:
+      - stdout
+    additive: false
+  sologger_geyser_plugin::geyser_plugin_sologger::update_slot_status:
+    level: error
+    appenders:
+      - stdout
+    additive: false
+  sologger_geyser_plugin::geyser_plugin_sologger:
+    level: info
+    appenders:
+      - stdout
+    additive: false

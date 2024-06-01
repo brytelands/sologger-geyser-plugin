@@ -1,0 +1,35 @@
+[package]
+name = "sologger-geyser-plugin"
+version = "1.0.0"
+edition = "2021"
+authors = ["Will Kennedy"]
+description = "Solana Geyser Plugin to parse raw logs emitted from a Solana RPC into structured logs and transport Solana logs to either a LogStash or OpenTelemetry endpoint via TCP"
+repository = "https://github.com/brytelands/sologger-geyser-plugin"
+categories = ["development-tools::debugging"]
+license = "Apache-2.0"
+keywords = ["solana", "geyser", "logging", "sologger", "otel"]
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+solana-geyser-plugin-interface = "=1.17.34"
+solana-logger = "=1.17.34"
+solana-sdk = "=1.17.34"
+solana-transaction-status = "=1.17.34"
+sologger_log_context = "0.1.2"
+sologger_log_transformer = "0.1.2"
+sologger_log_transport = "0.1.2"
+log = "0.4.20"
+bs58 = "0.5.1"
+log4rs = "1.2.0"
+anyhow = "1.0.71"
+serde_json = "1.0.117"
+serde = { version = "1.0.195", features = ["derive"] }
+crossbeam-deque = "0.8.5"
+
+tokio = { version = "1.0", features = ["sync", "rt"], optional = true }
+
+[features]
+enable_otel = ["sologger_log_transport/otel", "tokio"]
+enable_logstash = ["sologger_log_transport/logstash"]
