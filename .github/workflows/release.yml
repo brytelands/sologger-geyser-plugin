@@ -6,10 +6,7 @@ permissions:
 on:
   push:
     tags:
-      - v[0-9]+.*
-# on:
-#   release:
-#     types: [created]
+      - v[0-9]+.*.LOGSTASH
 
 jobs:
   create-release:
@@ -30,6 +27,7 @@ jobs:
         include:
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
+            features: systemd,io_uring
           - target: x86_64-apple-darwin
             os: macos-latest
           - target: x86_64-pc-windows-msvc
@@ -41,12 +39,8 @@ jobs:
         with:
           # (required) Comma-separated list of binary names (non-extension portion of filename) to build and upload.
           # Note that glob pattern is not supported yet.
-          bin: ...
+          bin: sologger-logstash-geyser-plugin
           # (optional) Target triple, default is host triple.
-          # This is optional but it is recommended that this always be set to
-          # clarify which target you are building for if macOS is included in
-          # the matrix because GitHub Actions changed the default architecture
-          # of macos-latest since macos-14.
           target: ${{ matrix.target }}
           # (optional) On which platform to distribute the `.tar.gz` file.
           # [default value: unix]
@@ -56,5 +50,7 @@ jobs:
           # [default value: windows]
           # [possible values: all, unix, windows, none]
           zip: windows
+          # (optional) Build with the given set of features if any.
+          features: ${{ matrix.features || 'enable_logstash' }}
           # (required) GitHub token for uploading assets to GitHub Releases.
           token: ${{ secrets.GITHUB_TOKEN }}
