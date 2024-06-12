@@ -14,24 +14,25 @@ loggers:
   sologger_geyser_plugin::log_processor::error:
     level: error
     appenders:
+      - stdout
     additive: false
   sologger_geyser_plugin::log_processor::info:
     level: info
     appenders:
+      - stdout
     additive: false
   sologger_geyser_plugin::geyser_plugin_sologger::update_account:
-    level: errore
+    level: error
     appenders:
+      - stdout
     additive: false
   sologger_geyser_plugin::geyser_plugin_sologger::notify_block_metadata:
     level: error
     appenders:
+      - stdout
     additive: false
   sologger_geyser_plugin::geyser_plugin_sologger::update_slot_status:
     level: error
     appenders:
-    additive: false
-  sologger_geyser_plugin::geyser_plugin_sologger:
-    level: error
-    appenders:
+      - stdout
     additive: false

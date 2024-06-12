@@ -52,9 +52,9 @@ RUN apt -y update && apt install -y pkg-config && apt install -y libssl-dev && a
 
 RUN apt -y install curl bzip2
 
-RUN sh -c "$(curl -sSfL https://release.solana.com/v1.17.35/install)"
-#ENV PATH="/root/.local/share/solana/install/active_release/bin:${PATH}"
-RUN #solana-keygen new --no-bip39-passphrase
+RUN sh -c "$(curl -sSfL https://release.solana.com/v1.17.34/install)"
+ENV PATH="/root/.local/share/solana/install/active_release/bin:${PATH}"
+RUN solana-keygen new --no-bip39-passphrase
 
 ENV SOLOGGER_APP_CONFIG_LOCATION=/config/local/sologger-config.json
 

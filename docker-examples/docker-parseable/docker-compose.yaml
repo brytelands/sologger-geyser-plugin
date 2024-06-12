@@ -37,8 +37,9 @@ services:
     depends_on:
       - parseable
 
-  sologger-geyser-plugin:
-    image: sologger-geyser-plugin
+  solana-test-validator-sologger-logstash:
+    image: brytelands/sologger-logstash-geyser-plugin:latest
+    container_name: solana-test-validator-sologger-logstash
     tty: true
     ports:
       - "1024:1024"

@@ -279,8 +279,8 @@ services:
       - otel-collector
     restart: on-failure
 
-  sologger-otel-geyser-plugin:
-    image: sologger-otel-geyser-plugin
+  solana-test-validator-sologger-otel:
+    image: brytelands/sologger-otel-geyser-plugin:latest
     container_name: solana-test-validator-sologger-otel
     restart: on-failure
     ports:
