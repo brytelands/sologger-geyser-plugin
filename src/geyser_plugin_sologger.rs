@@ -8,13 +8,13 @@ use std::time::Duration;
 use anyhow::Result as AnyResult;
 use crossbeam_deque::{Injector, Steal, Worker};
 use log::{error, info, trace};
-use solana_geyser_plugin_interface::geyser_plugin_interface::{ReplicaAccountInfoV2, ReplicaTransactionInfoV2};
+use agave_geyser_plugin_interface::geyser_plugin_interface::{ReplicaAccountInfoV2, ReplicaTransactionInfoV2};
 use solana_transaction_status::option_serializer::OptionSerializer;
 use sologger_log_context::programs_selector::ProgramsSelector;
 use sologger_log_context::sologger_log_context::LogContext;
 
 use {
-    solana_geyser_plugin_interface::geyser_plugin_interface::{
+    agave_geyser_plugin_interface::geyser_plugin_interface::{
         GeyserPlugin, GeyserPluginError,
         ReplicaAccountInfoVersions, ReplicaBlockInfoVersions, ReplicaTransactionInfoVersions,
         SlotStatus,
@@ -85,7 +85,7 @@ impl GeyserPlugin for SologgerGeyserPlugin {
     /// of the config file. The config must be in JSON format and
     /// include a field "libpath" indicating the full path
     /// name of the shared library implementing this interface.
-    fn on_load(&mut self, _config_file: &str) -> solana_geyser_plugin_interface::geyser_plugin_interface::Result<()> {
+    fn on_load(&mut self, _config_file: &str, _is_reload: bool) -> agave_geyser_plugin_interface::geyser_plugin_interface::Result<()> {
         let (sologger_config, program_selector) = config_loader::load_config().expect("Error loading sologger config");
         let config = sologger_config.clone();
         self.context.sologger_config = sologger_config;
@@ -135,7 +135,7 @@ impl GeyserPlugin for SologgerGeyserPlugin {
     /// - When `is_startup` is false, the account is updated during transaction processing.
     /// Note: The account is versioned, so you can decide how to handle the different
     /// implementations.
-    fn update_account(&self, account: ReplicaAccountInfoVersions, slot: u64, _is_startup: bool) -> solana_geyser_plugin_interface::geyser_plugin_interface::Result<()> {
+    fn update_account(&self, account: ReplicaAccountInfoVersions, slot: u64, _is_startup: bool) -> agave_geyser_plugin_interface::geyser_plugin_interface::Result<()> {
         match account {
             ReplicaAccountInfoVersions::V0_0_1(_) => {
                 return Err(GeyserPluginError::AccountsUpdateError { msg: "ReplicaAccountInfoVersions::V0_0_1 it not supported".to_string() });
@@ -162,20 +162,20 @@ impl GeyserPlugin for SologgerGeyserPlugin {
 
     // Lifecycle: called when all accounts have been notified when the validator
     // restores the AccountsDb from snapshots at startup.
-    fn notify_end_of_startup(&self) -> solana_geyser_plugin_interface::geyser_plugin_interface::Result<()> {
+    fn notify_end_of_startup(&self) -> agave_geyser_plugin_interface::geyser_plugin_interface::Result<()> {
         info!("[notify_end_of_startup]");
         Ok(())
     }
 
     // Event: a slot status is updated.
-    fn update_slot_status(&self, _slot: u64, _parent: Option<u64>, _status: SlotStatus) -> solana_geyser_plugin_interface::geyser_plugin_interface::Result<()> {
+    fn update_slot_status(&self, _slot: u64, _parent: Option<u64>, _status: SlotStatus) -> agave_geyser_plugin_interface::geyser_plugin_interface::Result<()> {
         info!(target: "sologger_geyser_plugin::geyser_plugin_sologger::update_slot_status", "[update_slot_status], slot:{:#?}, parent:{:#?}, status:{:#?}", _slot, _parent, _status);
         Ok(())
     }
 
     /// Event: a transaction is updated at a slot.
     #[allow(unused_variables)]
-    fn notify_transaction(&self, transaction: ReplicaTransactionInfoVersions, slot: u64) -> solana_geyser_plugin_interface::geyser_plugin_interface::Result<()> {
+    fn notify_transaction(&self, transaction: ReplicaTransactionInfoVersions, slot: u64) -> agave_geyser_plugin_interface::geyser_plugin_interface::Result<()> {
         let replication_transaction_info = ReplicaTransactionInfo::from((transaction, slot));
         let task = Task {
             slot,
@@ -187,7 +187,7 @@ impl GeyserPlugin for SologgerGeyserPlugin {
         Ok(())
     }
 
-    fn notify_block_metadata(&self, blockinfo: ReplicaBlockInfoVersions) -> solana_geyser_plugin_interface::geyser_plugin_interface::Result<()> {
+    fn notify_block_metadata(&self, blockinfo: ReplicaBlockInfoVersions) -> agave_geyser_plugin_interface::geyser_plugin_interface::Result<()> {
         match blockinfo {
             ReplicaBlockInfoVersions::V0_0_1(_blockinfo) => {
                 info!(target: "sologger_geyser_plugin::geyser_plugin_sologger::notify_block_metadata", "[notify_block_metadata], block_info:{:#?}", _blockinfo);
@@ -196,6 +196,9 @@ impl GeyserPlugin for SologgerGeyserPlugin {
                 info!(target: "sologger_geyser_plugin::geyser_plugin_sologger::notify_block_metadata", "[notify_block_metadata], block_info:{:#?}", _blockinfo);
             }
             ReplicaBlockInfoVersions::V0_0_3(_blockinfo) => {
+                info!(target: "sologger_geyser_plugin::geyser_plugin_sologger::notify_block_metadata", "[notify_block_metadata], block_info:{:#?}", _blockinfo);
+            }
+            ReplicaBlockInfoVersions::V0_0_4(_blockinfo) => {
                 info!(target: "sologger_geyser_plugin::geyser_plugin_sologger::notify_block_metadata", "[notify_block_metadata], block_info:{:#?}", _blockinfo);
             }
         }
@@ -310,12 +313,7 @@ pub(crate) mod tests {
 
         let transaction = VersionedTransaction::from(transaction);
 
-        let transaction = SanitizedTransaction::try_create(
-            transaction,
-            message_hash,
-            Some(true),
-            SimpleAddressLoader::Disabled,
-        )
+        let transaction = SanitizedTransaction::try_create(transaction, message_hash, Some(true), SimpleAddressLoader::Disabled, &Default::default())
             .unwrap();
 
         let transaction_status_meta = TransactionStatusMeta {
