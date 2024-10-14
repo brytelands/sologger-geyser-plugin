@@ -1,6 +1,6 @@
 use {
     crate::geyser_plugin_sologger::SologgerGeyserPlugin,
-    solana_geyser_plugin_interface::geyser_plugin_interface::GeyserPlugin,
+    agave_geyser_plugin_interface::geyser_plugin_interface::GeyserPlugin,
 };
 
 use crate::geyser_plugin_sologger::PluginContext;

@@ -1,4 +1,4 @@
-use solana_geyser_plugin_interface::geyser_plugin_interface::ReplicaTransactionInfoVersions;
+use agave_geyser_plugin_interface::geyser_plugin_interface::ReplicaTransactionInfoVersions;
 use solana_sdk::clock::UnixTimestamp;
 use solana_sdk::signature::Signature;
 use solana_sdk::transaction::SanitizedTransaction;

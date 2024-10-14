@@ -1,6 +1,6 @@
 use anyhow::Result;
 use log::{error, info};
-use solana_geyser_plugin_interface::geyser_plugin_interface::ReplicaTransactionInfoV2;
+use agave_geyser_plugin_interface::geyser_plugin_interface::ReplicaTransactionInfoV2;
 use solana_transaction_status::option_serializer::OptionSerializer;
 use sologger_log_context::programs_selector::ProgramsSelector;
 use sologger_log_context::sologger_log_context::LogContext;
